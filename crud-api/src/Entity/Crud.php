@@ -24,12 +24,12 @@ class Crud
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getTitleLoc(): ?string
+    public function getTitleLoc(): string
     {
         return $this->titleLoc;
     }

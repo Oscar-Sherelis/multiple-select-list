@@ -7,10 +7,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Crud;
+use App\Dto\CreatePostDto;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\CrudFactory;
 
 class ApiController extends AbstractController
 {
@@ -34,19 +36,24 @@ class ApiController extends AbstractController
     }
 
     #[Route('/api/post_api', name: 'post_api', methods: 'POST')]
-    public function post_api(Request $req): JsonResponse
+    public function post_api(#[Body] CreatePostDto $data): JsonResponse
     {
-        $parameter = json_decode($req->getContent(), true);
+        // $parameter = json_decode($req->getContent(), true);
         $crud = new Crud();
-        $title = $crud->setTitle($parameter['title']);
-        $titleLoc = $crud->setTitleLoc($parameter['titleLoc']);
 
-        // $this->objectManager->persist($crud);
-        // $this->objectManager->flush();
-
-        $entity = $crud->create($title, $titleLoc);
+        $entity = CrudFactory::create($data->getTitle(), $data->getTitleLoc());
         $this->objectManager->persist($entity);
         $this->objectManager->flush();
+
+        // $title = $crud->setTitle($parameter['title']);
+        // $titleLoc = $crud->setTitleLoc($parameter['titleLoc']);
+
+        // // $this->objectManager->persist($crud);
+        // // $this->objectManager->flush();
+
+        // $entity = $crud->create($title, $titleLoc);
+        // $this->objectManager->persist($entity);
+        // $this->objectManager->flush();
 
         return $this->json([
             'message' => 'Welcome to your new controller!',
