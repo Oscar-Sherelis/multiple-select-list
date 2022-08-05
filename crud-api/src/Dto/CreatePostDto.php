@@ -5,12 +5,12 @@ namespace App\Dto;
 class CreatePostDto
 {
     private string $title;
-    private string $titleLoc;
+    private string $title_loc;
 
-    static function of(string $title, string $titleLoc): CreatePostDto
+    static function of(string $title, string $title_loc): CreatePostDto
     {
         $dto = new CreatePostDto();
-        $dto->setTitle($title)->setTitleLoc($titleLoc);
+        $dto->setTitle($title)->setTitleLoc($title_loc);
         return $dto;
     }
 
@@ -24,12 +24,12 @@ class CreatePostDto
     }
 
     /**
-     * @param string $titleLoc
+     * @param string $title_loc
      */
     public
-    function setTitleLoc(string $titleLoc): self
+    function setTitleLoc(string $title_loc): self
     {
-        $this->titleLoc = $titleLoc;
+        $this->title_loc = $title_loc;
         return $this;
     }
 
@@ -48,7 +48,7 @@ class CreatePostDto
     public
     function getTitleLoc(): string
     {
-        return $this->titleLoc;
+        return $this->title_loc;
     }
 
 

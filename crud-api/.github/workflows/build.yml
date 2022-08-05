@@ -1,0 +1,78 @@
+name: Build
+
+on:
+  push:
+    paths-ignore:
+      - "docs/**"
+    branches: [ master ]
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+# see: https://www.strangebuzz.com/en/blog/setting-a-ci-cd-workflow-for-a-symfony-project-thanks-to-the-github-actions
+# and https://antonshell.me/en/post/github-actions-symfony
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    # https://github.com/shivammathur/setup-php (community)
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.1
+        coverage: none
+        tools: composer:v2
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, pgsql, dom, filter, gd, json, mbstring, pdo
+      env:
+        update: true
+    - name: Check PHP Version
+      run: php -v
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3.0.4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      #if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install --prefer-dist --no-progress --no-suggest
+    # —— Symfony ——————————————————————————————————————————————————————————
+    - name: Check Symfony requirements
+      run: |      
+        echo 'deb [trusted=yes] https://repo.symfony.com/apt/ /' |sudo tee /etc/apt/sources.list.d/symfony-cli.list
+        sudo apt update
+        sudo apt install symfony-cli 
+        symfony check:requirements   
+        php bin/console -V
+    # —— Code style —— (Based on this package: https://github.com/OskarStark/php-cs-fixer-ga)
+    #- name: PHP-CS-Fixer
+    #  uses: docker://oskarstark/php-cs-fixer-ga
+    #  with:
+    #    args: --config=.php_cs.dist --diff --dry-run
+    
+    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    - name: Setup Database
+      run: |
+        docker-compose up -d postgres
+        sleep 10
+        docker ps -a
+    - name: Run test suite
+      run: |
+        php ./bin/console doctrine:schema:create -n
+        php ./bin/console doctrine:fixtures:load --purge-with-truncate -n
+        composer run-script test
