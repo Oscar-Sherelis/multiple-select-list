@@ -27,7 +27,7 @@ class AddPostCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('title', InputArgument::REQUIRED, 'Title of a post')
-            ->addArgument('content', InputArgument::REQUIRED, 'Content of a post')
+            ->addArgument('title_loc', InputArgument::REQUIRED, 'Content of a title_loc')
             //->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
         ;
     }
@@ -50,6 +50,7 @@ class AddPostCommand extends Command
         $entity = PostFactory::create($title, $title_loc);
         $this->manager->persist($entity);
         $this->manager->flush();
+        $this->objectManager->clear();
 
 //        if ($input->getOption('option1')) {
 //            // ...

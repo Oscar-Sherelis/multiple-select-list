@@ -38,24 +38,24 @@ class PostController extends AbstractController
     {
     }
 
-//    #[Route(path: "", name: "all", methods: ["GET"])]
-//    function all(): Response
-//    {
-//        $data = $this->posts->findAll();
-//        return $this->json($data);
-//    }
+   #[Route(path: "", name: "all", methods: ["GET"])]
+   function all(): Response
+   {
+       $data = $this->posts->findAll();
+       return $this->json($data);
+   }
 
     // function all(string $keyword, #[PositiveOrZero] int $offset = 0, #[Positive] int $limit = 20): Response
     // see: https://github.com/symfony/symfony/issues/43958
     // #[Route(path: "", name: "all", methods: ["GET"])]
-    #[Get(path: "", name: "all")]
-    public function all(#[QueryParam] string $keyword,
-                        #[QueryParam] int $offset = 0,
-                        #[QueryParam] int $limit = 20): Response
-    {
-        $data = $this->posts->findByKeyword($keyword ?: '', $offset, $limit);
-        return $this->json($data);
-    }
+    // #[Get(path: "", name: "all")]
+    // public function all(#[QueryParam] string $keyword,
+    //                     #[QueryParam] int $offset = 0,
+    //                     #[QueryParam] int $limit = 20): Response
+    // {
+    //     $data = $this->posts->findByKeyword($keyword ?: '', $offset, $limit);
+    //     return $this->json($data);
+    // }
 
     // #[Route(path: "/{id}", name: "byId", methods: ["GET"])]
     #[Get(path: "/{id}", name: "byId")]
@@ -77,6 +77,7 @@ class PostController extends AbstractController
         $entity = PostFactory::create($data->getTitle(), $data->getTitleLoc());
         $this->objectManager->persist($entity);
         $this->objectManager->flush();
+        $this->objectManager->clear();
 
         return $this->json([], 201, ["Location" => "/posts/" . $entity->getId()]);
     }
@@ -129,20 +130,6 @@ class PostController extends AbstractController
         $this->objectManager->flush();
 
         return $this->json([], 204);
-    }
-
-    // comments sub resources.
-    //#[Route(path: "/{id}/comments", name: "commentByPostId", methods: ["GET"])]
-    #[GET(path: "/{id}/comments", name: "commentByPostId")]
-    public function getComments($id): Response
-    {
-        $data = $this->posts->findOneBy(["id" => $id]);
-        if ($data) {
-            return $this->json($data->getComments());
-        } else {
-            throw new PostNotFoundException($id);
-            //return $this->json(["error" => "Post was not found b}y id:" . $id], 404);
-        }
     }
 
 }

@@ -5,12 +5,12 @@ namespace App\Dto;
 class UpdatePostDto
 {
     private string $title;
-    private string $content;
+    private string $title_loc;
 
-    static function of(string $title, string $content): UpdatePostDto
+    static function of(string $title, string $title_loc): UpdatePostDto
     {
         $dto = new UpdatePostDto();
-        $dto->setTitle($title)->setTitleLoc($content);
+        $dto->setTitle($title)->setTitleLoc($title_loc);
         return $dto;
     }
 
@@ -24,12 +24,12 @@ class UpdatePostDto
     }
 
     /**
-     * @param string $content
+     * @param string $title_loc
      */
     public
-    function setTitleLoc(string $content): self
+    function setTitleLoc(string $title_loc): self
     {
-        $this->content = $content;
+        $this->title_loc = $title_loc;
         return $this;
     }
 
@@ -48,7 +48,7 @@ class UpdatePostDto
     public
     function getTitleLoc(): string
     {
-        return $this->content;
+        return $this->title_loc;
     }
 
 
