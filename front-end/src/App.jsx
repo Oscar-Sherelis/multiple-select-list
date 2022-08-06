@@ -1,82 +1,114 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Form from 'react-bootstrap/Form';
 import './App.scss';
 import { AppService } from './services/app.service';
 
 function App() {
   const [data, setData] = useState([])
-  const [leftListSelectedItems, setLeftListSelectedItems] = useState([])
-  const [RightListSelectedItems, setRightListSelectedItems] = useState([])
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const mounted = useRef(true);
+
+  const [leftListSelectedItems, setLeftListSelectedItems] = useState([]);
+  const [rightListSelectedItems, setRightListSelectedItems] = useState([]);
 
   const appService = new AppService();
 
   useEffect(() => {
-    appService.getPosts().then(data => setData(data));
-  }, [])
+
+    mounted.current = true;
+
+    if (data.length === 0 && mounted.current) {
+      appService.getPosts().then(data => setData(data));
+    }
+
+    if (buttonClicked) {
+      appService.getPosts().then(data => setData(data));
+      setButtonClicked(false)
+    }
+
+    return () => mounted.current = false
+  }, [buttonClicked, data])
 
 
   // Events
 
-  const handleSelectedItems = (e) => {
-    setLeftListSelectedItems([...e.target.selectedOptions].map(o => o.value)); 
-    // console.log(leftListSelectedItems)
+  const handleSelectedLeftListItems = (e) => {
+    setLeftListSelectedItems([...e.target.selectedOptions].map(o => o.value));
+    console.log(leftListSelectedItems)
   }
 
-  const toRight = (id) => {
-    appService.moveTo(id, "right")
+  const handleSelectedRightListItems = (e) => {
+    setRightListSelectedItems([...e.target.selectedOptions].map(o => o.value));
+    console.log(rightListSelectedItems)
   }
 
-  const allToRight = () => {
+  const toRight = async () => {
 
-    data.map(async ({id, titleLoc}) => {
-      if (titleLoc === "left") {
-        await appService.moveTo(id, "right")
-      }
+    await leftListSelectedItems.map(id => {
+      appService.moveTo(id, "right")
     })
 
-    appService.getPosts().then(data => setData(data));
-  }
-
-  const allToLeft = async() => {
-
-     await data.map(async ({id, titleLoc}) => {
-      if (titleLoc === "right") {
-        await appService.moveTo(id, "left")
-      }
-    })
-
-    console.log("not finished")
+    await setButtonClicked(true)
     await appService.getPosts().then(data => setData(data));
   }
 
-  // for testing
-  const showData = () => {
-    console.log(data)
+  const toLeft = async () => {
+
+    await rightListSelectedItems.map(id => {
+      appService.moveTo(id, "left")
+    })
+
+    await setButtonClicked(true)
+    await appService.getPosts().then(data => setData(data));
+  }
+
+  const allToRight = async () => {
+
+    await data.map(({ id, titleLoc }) => {
+      if (titleLoc === "left") {
+         appService.moveTo(id, "right")
+      }
+    })
+
+    await setButtonClicked(true)
+    await appService.getPosts().then(data => setData(data));
+  }
+
+  const allToLeft = async () => {
+
+     data.map(({ id, titleLoc }) => {
+      if (titleLoc === "right") {
+         appService.moveTo(id, "left")
+      }
+    })
+
+    await setButtonClicked(true)
+    await appService.getPosts().then(data => setData(data));
   }
 
   return (
     <div className="App">
       <Form.Group>
-        <Form.Control as="select" onChange={(e) => {handleSelectedItems(e)}} multiple>
-          {data.map(({id, title, titleLoc}) => (
+        <Form.Control as="select" onChange={(e) => { handleSelectedLeftListItems(e) }} multiple>
+          {data.map(({ id, title, titleLoc }) => (
             titleLoc === "left"
-            ? <option key={id} value={title}>{title}</option>
-            : null
+              ? <option key={id} value={id}>{title}</option>
+              : null
           ))}
         </Form.Control>
       </Form.Group>
       <div className="buttons">
         <button className="all-to-right" onClick={() => { allToRight() }}>{">>"}</button>
-        <button className="single-to-right" onClick={() => {toRight(4)}}>{">"}</button>
-        <button className="single-to-left">{"<"}</button>
-        <button className="all-to-left" onClick={() => {allToLeft()}}>{"<<"}</button>
+        <button className="single-to-right" onClick={() => { toRight() }}>{">"}</button>
+        <button className="single-to-left" onClick={() => { toLeft() }}>{"<"}</button>
+        <button className="all-to-left" onClick={() => { allToLeft() }}>{"<<"}</button>
       </div>
       <Form.Group>
-        <Form.Control as="select" onChange={(e) => {handleSelectedItems(e)}} multiple>
-          {data.map(({id, title, titleLoc}) => (
+        <Form.Control as="select" onChange={(e) => { handleSelectedRightListItems(e) }} multiple>
+          {data.map(({ id, title, titleLoc }) => (
             titleLoc === "right"
-            ? <option key={id} value={title}>{title}</option>
-            : null
+              ? <option key={id} value={id}>{title}</option>
+              : null
           ))}
         </Form.Control>
       </Form.Group>
