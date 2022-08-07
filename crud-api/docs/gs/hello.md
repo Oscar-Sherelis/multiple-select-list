@@ -79,14 +79,4 @@ class Greeting
     }
     
     // use IDE to generate setters and getters
-}    
-```
-
-Run the application, use `curl` to test the `/hello` endpoint.
-
-```bash
-$ curl http://localhost:8000/hello
-{"message":"Hello Symfony"}
-$ curl http://localhost:8000/hello?name=Hantsy
-{"message":"Hello Hantsy"}
-```
+}

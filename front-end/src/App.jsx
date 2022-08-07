@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import Form from 'react-bootstrap/Form';
 import './App.scss';
 import { AppService } from './services/app.service';
+import MultiSelectList from './components/MultiSelectList';
 
 function App() {
   const [data, setData] = useState([])
@@ -34,12 +34,10 @@ function App() {
 
   const handleSelectedLeftListItems = (e) => {
     setLeftListSelectedItems([...e.target.selectedOptions].map(o => o.value));
-    console.log(leftListSelectedItems)
   }
 
   const handleSelectedRightListItems = (e) => {
     setRightListSelectedItems([...e.target.selectedOptions].map(o => o.value));
-    console.log(rightListSelectedItems)
   }
 
   const toRight = async () => {
@@ -66,7 +64,7 @@ function App() {
 
     await data.map(({ id, titleLoc }) => {
       if (titleLoc === "left") {
-         appService.moveTo(id, "right")
+        appService.moveTo(id, "right")
       }
     })
 
@@ -76,9 +74,9 @@ function App() {
 
   const allToLeft = async () => {
 
-     data.map(({ id, titleLoc }) => {
+    data.map(({ id, titleLoc }) => {
       if (titleLoc === "right") {
-         appService.moveTo(id, "left")
+        appService.moveTo(id, "left")
       }
     })
 
@@ -88,30 +86,18 @@ function App() {
 
   return (
     <div className="App">
-      <Form.Group>
-        <Form.Control as="select" onChange={(e) => { handleSelectedLeftListItems(e) }} multiple>
-          {data.map(({ id, title, titleLoc }) => (
-            titleLoc === "left"
-              ? <option key={id} value={id}>{title}</option>
-              : null
-          ))}
-        </Form.Control>
-      </Form.Group>
-      <div className="buttons">
-        <button className="all-to-right" onClick={() => { allToRight() }}>{">>"}</button>
-        <button className="single-to-right" onClick={() => { toRight() }}>{">"}</button>
-        <button className="single-to-left" onClick={() => { toLeft() }}>{"<"}</button>
-        <button className="all-to-left" onClick={() => { allToLeft() }}>{"<<"}</button>
+      <h3>To select list item: ctrl + click (on windows)</h3>
+      <h3>Command + click (on Mac)</h3>
+      <div className="multi-list">
+        <MultiSelectList data={data} handleSelectedListItems={handleSelectedLeftListItems} side="left"/>
+        <div className="buttons">
+          <button className="all-to-right" onClick={() => { allToRight() }}>{">>"}</button>
+          <button className="single-to-right" onClick={() => { toRight() }}>{">"}</button>
+          <button className="single-to-left" onClick={() => { toLeft() }}>{"<"}</button>
+          <button className="all-to-left" onClick={() => { allToLeft() }}>{"<<"}</button>
+        </div>
+        <MultiSelectList data={data} handleSelectedListItems={handleSelectedRightListItems} side="right"/>
       </div>
-      <Form.Group>
-        <Form.Control as="select" onChange={(e) => { handleSelectedRightListItems(e) }} multiple>
-          {data.map(({ id, title, titleLoc }) => (
-            titleLoc === "right"
-              ? <option key={id} value={id}>{title}</option>
-              : null
-          ))}
-        </Form.Control>
-      </Form.Group>
     </div>
   )
 }

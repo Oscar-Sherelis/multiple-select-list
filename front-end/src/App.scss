@@ -6,6 +6,16 @@
  
   .App {
 
+    display: flex;
+    flex-direction: column;
+
+    h3:last-of-type  {
+      margin-top: 0;
+    }
+  }
+
+  .multi-list {
+
     @media (min-width: 500px) {
       display: flex;
       align-items: center;
@@ -27,4 +37,34 @@ select {
 
   display: flex;
   flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 500px) {
+  
+    margin: 15px 0;
+  }
+
+  .single-to-right,
+  .single-to-left {
+
+    background-color: #3BACAB;
+  }
+
+  .all-to-right,
+  .all-to-left {
+
+    background-color: #6D757C;
+  }
+
+  button {
+    color: #FFFFFF;
+    width: 60px;
+  }
+
+  button:not(:last-child) {
+
+    margin-bottom: 10px;
+  }
+
+  // 6D757C
 }

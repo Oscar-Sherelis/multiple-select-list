@@ -1,10 +1,9 @@
 {
-  "name": "hantsy/symfony-rest-sample",
+  "name": "symfony-rest-sample",
   "description": "Restful APIs examples built with Symfony 5 and PHP 8",
   "authors": [
     {
-      "name": "Hantsy Bai",
-      "email": "hantsy@gmail.com"
+      "name": "Oscar"
     }
   ],
   "type": "project",

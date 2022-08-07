@@ -1,17 +1,11 @@
 # Symfony Sample
 
-Building Symfony RESTful APIs using the latest Symfony, Doctrine, PHPUnit, etc. 
-
-## Docs
-
-Go to the [online docs](https://hantsy.github.io/symfony-rest-sample/) to read the step-by-step guide.
+Building Symfony RESTful APIs using the latest Symfony, etc.
 
 ## Build 
 
-Start a Postgres database.
+Start a MySQL database.
 
-```
-docker compose up postgres
 ```
 
 Run the application

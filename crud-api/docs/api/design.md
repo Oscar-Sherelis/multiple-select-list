@@ -39,10 +39,3 @@ When we design RESTful API, besides following the HTTP protocol and REST convent
 
 For example,  there is  a scenario: *retrieving comments created by the current authenticated user*, we could have some different design considerations:
 
-* *GET /comments?user=hantsy*  Use a united endpoint for all cases,  and *explicitly* add an  query parameter to filter the comments
-* *GET /me/comments* The endpoint is mounted under *the authenticated user endpoint*(*/me*), and *implicitly* filter comments by the user
-
-Which is better? I prefer the later. 
-
-Sometimes it is difficult to make a decision this one is good and the other are bad.  Besides identifying the resources, URI path itself is meaningful, it could indicate the root/leaves, whole/parts or parent/children relations. So in my mind, when considering the scenario *retrieving comments of a Post*,  *GET /posts/{id}/comments* is better than *GET /comments?post=id*.
-

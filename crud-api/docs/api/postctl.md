@@ -298,7 +298,7 @@ Run the application, and try to access *http://localhost:8000/posts/{id}*, it wi
 
 ```bash
 App\Controller\PostController::getById(): Argument #1 ($id) must be of type Symfony\Component\Uid\Uuid, string given, cal
-led in D:\hantsylabs\symfony5-sample\rest-sample\vendor\symfony\http-kernel\HttpKernel.php on line 156
+led in \rest-sample\vendor\symfony\http-kernel\HttpKernel.php on line 156
 
 ```
 

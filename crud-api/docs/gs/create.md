@@ -67,9 +67,7 @@ Open your terminal, switch to the project root folder, and run the following com
 
  [WARNING] run "symfony.exe server:ca:install" first if you want to run the web server with TLS support, or use "--no-  
  tls" to avoid this warning                                                                                             
-                                                                                                                       
-Tailing PHP-CGI log file (C:\Users\hantsy\.symfony\log\499d60b14521d4842ba7ebfce0861130efe66158\79ca75f9e90b4126a5955a33ea6a41ec5e854698.log)
-Tailing Web Server log file (C:\Users\hantsy\.symfony\log\499d60b14521d4842ba7ebfce0861130efe66158.log)
+                                                                                                    
                                                                                                                         
  [OK] Web server listening                                                                                              
       The Web server is using PHP CGI 8.0.10                                                                            

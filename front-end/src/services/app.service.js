@@ -19,7 +19,6 @@ export class AppService {
           })
 
           let test = await response.json()
-          console.log(test)
         return await response.json();
     }
 
